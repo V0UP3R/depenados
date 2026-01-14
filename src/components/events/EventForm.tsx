@@ -6,10 +6,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { Button, Input, Textarea } from '@/components/ui';
+import { Button, Input, Textarea, MemberSelector } from '@/components/ui';
 import { useEventStore } from '@/stores/event-store';
 import { useMamacoConfirmation } from '@/hooks/useMamacoConfirmation';
-import type { Event, EventStatus } from '@/types/story';
+import type { Event, EventStatus, Member } from '@/types/story';
 
 const eventSchema = z.object({
   title: z
@@ -35,7 +35,7 @@ const eventSchema = z.object({
 type EventFormData = z.infer<typeof eventSchema>;
 
 interface EventFormProps {
-  initialData?: Partial<Event>;
+  initialData?: Partial<Event> & { participants?: Member[]; participantIds?: string[] };
   mode?: 'create' | 'edit';
 }
 
@@ -43,6 +43,9 @@ export function EventForm({ initialData, mode = 'create' }: EventFormProps) {
   const router = useRouter();
   const { createEvent, updateEvent } = useEventStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [participantIds, setParticipantIds] = useState<string[]>(
+    initialData?.participantIds || initialData?.participants?.map((p) => p.id) || []
+  );
 
   const { confirm, MamacoComponents } = useMamacoConfirmation({
     successMessage: mode === 'edit' ? 'EVENTO EDITADO!!!' : 'BORA PRO ROLÊ!!!',
@@ -81,6 +84,7 @@ export function EventForm({ initialData, mode = 'create' }: EventFormProps) {
         date: data.date,
         createdBy: data.createdBy,
         status: (data.status || 'upcoming') as EventStatus,
+        participantIds,
       };
 
       if (mode === 'edit' && initialData?.id) {
@@ -163,6 +167,15 @@ export function EventForm({ initialData, mode = 'create' }: EventFormProps) {
           rows={4}
           error={errors.description?.message}
           {...register('description')}
+        />
+
+        {/* Participants */}
+        <MemberSelector
+          label="Quem Vai Participar?"
+          hint="Selecione os membros confirmados para o role"
+          placeholder="Buscar membros..."
+          selectedIds={participantIds}
+          onChange={setParticipantIds}
         />
 
         {/* Status (only in edit mode) */}

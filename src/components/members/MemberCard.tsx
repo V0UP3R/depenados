@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import type { Member } from '@/types/story';
@@ -16,7 +17,7 @@ interface MemberCardProps {
   index?: number;
 }
 
-export function MemberCard({ member, index = 0 }: MemberCardProps) {
+export const MemberCard = memo(function MemberCard({ member, index = 0 }: MemberCardProps) {
   const totalStories = (member._count?.storiesAuthored || 0) + (member._count?.storiesIn || 0);
   const totalEvents = (member._count?.eventsCreated || 0) + (member._count?.eventsIn || 0);
 
@@ -35,6 +36,8 @@ export function MemberCard({ member, index = 0 }: MemberCardProps) {
             <img
               src={member.avatar}
               alt={member.nickname}
+              loading="lazy"
+              decoding="async"
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
             />
           ) : (
@@ -88,4 +91,4 @@ export function MemberCard({ member, index = 0 }: MemberCardProps) {
       </motion.article>
     </Link>
   );
-}
+});

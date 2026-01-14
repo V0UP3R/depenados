@@ -89,7 +89,7 @@ export default function EditStoryPage() {
         </motion.div>
 
         {/* Form */}
-        <StoryForm 
+        <StoryForm
           initialData={{
             id: story.id,
             title: story.title,
@@ -99,8 +99,9 @@ export default function EditStoryPage() {
             tags: story.tags?.join(', '),
             featured: story.featured,
             media: story.media,
-          }} 
-          mode="edit" 
+            participants: story.participants,
+          }}
+          mode="edit"
         />
       </div>
     </div>

@@ -25,6 +25,10 @@ export interface Story {
   media: MediaItem[];
   coverImage?: string;
   author: string;
+  authorId?: string;
+  authorMember?: Member;
+  participants?: Member[];
+  participantIds?: string[];
   createdAt: string;
   updatedAt: string;
   tags?: string[];
@@ -43,6 +47,10 @@ export interface Event {
   date: string;
   coverImage?: string;
   createdBy: string;
+  creatorId?: string;
+  creator?: Member;
+  participants?: Member[];
+  participantIds?: string[];
   status: EventStatus;
   stories?: Story[];
   _count?: { stories: number };

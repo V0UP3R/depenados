@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import type { Story } from '@/types/story';
@@ -9,7 +10,7 @@ interface StoryCardProps {
   index?: number;
 }
 
-export function StoryCard({ story, index = 0 }: StoryCardProps) {
+export const StoryCard = memo(function StoryCard({ story, index = 0 }: StoryCardProps) {
   const formattedDate = new Date(story.createdAt).toLocaleDateString('pt-BR', {
     day: 'numeric',
     month: 'short',
@@ -40,6 +41,8 @@ export function StoryCard({ story, index = 0 }: StoryCardProps) {
                 <motion.img
                   src={story.coverImage}
                   alt={story.title}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover"
                   whileHover={{ scale: 1.1 }}
                   transition={{ duration: 0.6 }}
@@ -130,4 +133,4 @@ export function StoryCard({ story, index = 0 }: StoryCardProps) {
       </Link>
     </motion.article>
   );
-}
+});

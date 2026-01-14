@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import type { Story } from '@/types/story';
+import { ParticipantsList } from '@/components/ui';
 
 interface StoryViewProps {
   story: Story;
@@ -32,6 +33,8 @@ export function StoryView({ story }: StoryViewProps) {
             <img
               src={story.coverImage}
               alt={story.title}
+              loading="eager"
+              decoding="async"
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[var(--void-black)] via-[var(--void-black)]/50 to-transparent" />
@@ -168,6 +171,8 @@ export function StoryView({ story }: StoryViewProps) {
                   <img
                     src={item.url}
                     alt={item.caption || 'Prova da mamacada'}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover"
                   />
                 ) : item.type === 'video' ? (
@@ -210,6 +215,24 @@ export function StoryView({ story }: StoryViewProps) {
               </motion.div>
             ))}
           </div>
+        </motion.section>
+      )}
+
+      {/* Participants Section */}
+      {story.participants && story.participants.length > 0 && (
+        <motion.section
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="mt-16"
+        >
+          <ParticipantsList
+            participants={story.participants}
+            title="Quem Estava na Mamacada"
+            variant="default"
+            size="md"
+            linkToProfile
+          />
         </motion.section>
       )}
 

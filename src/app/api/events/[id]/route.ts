@@ -20,6 +20,7 @@ export async function GET(
             createdAt: 'desc',
           },
         },
+        participants: true,
       },
     });
 
@@ -48,7 +49,7 @@ export async function PUT(
   try {
     const { id } = await params;
     const body = await request.json();
-    const { title, description, location, date, coverImage, status } = body;
+    const { title, description, location, date, coverImage, status, participantIds } = body;
 
     const event = await prisma.event.update({
       where: { id },
@@ -59,6 +60,14 @@ export async function PUT(
         ...(date && { date: new Date(date) }),
         ...(coverImage !== undefined && { coverImage }),
         ...(status && { status }),
+        ...(participantIds && {
+          participants: {
+            set: participantIds.map((pid: string) => ({ id: pid })),
+          },
+        }),
+      },
+      include: {
+        participants: true,
       },
     });
 

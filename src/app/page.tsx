@@ -1,12 +1,22 @@
 'use client';
 
 import { useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Button } from '@/components/ui';
 import { useStoryStore } from '@/stores/story-store';
-import { ChaosCounter } from '@/components/counters';
-import { UpcomingEvents } from '@/components/events';
+
+// Dynamic imports - carrega componentes apenas quando necessário
+const ChaosCounter = dynamic(() => import('@/components/counters').then(mod => ({ default: mod.ChaosCounter })), {
+  loading: () => <div className="h-40 animate-pulse bg-[var(--surface-card)]" />,
+  ssr: false,
+});
+
+const UpcomingEvents = dynamic(() => import('@/components/events').then(mod => ({ default: mod.UpcomingEvents })), {
+  loading: () => <div className="h-40 animate-pulse bg-[var(--surface-card)]" />,
+  ssr: false,
+});
 
 export default function HomePage() {
   const { stories, fetchStories, isLoading } = useStoryStore();

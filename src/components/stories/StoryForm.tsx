@@ -6,10 +6,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { Button, Input, Textarea, MediaUpload } from '@/components/ui';
+import { Button, Input, Textarea, MediaUpload, MemberSelector } from '@/components/ui';
 import { useStoryStore } from '@/stores/story-store';
 import { useMamacoConfirmation } from '@/hooks/useMamacoConfirmation';
-import type { MediaItem } from '@/types/story';
+import type { MediaItem, Member } from '@/types/story';
 
 const storySchema = z.object({
   title: z
@@ -41,7 +41,7 @@ interface UploadedFile {
 }
 
 interface StoryFormProps {
-  initialData?: Partial<StoryFormData> & { id?: string; media?: MediaItem[] };
+  initialData?: Partial<StoryFormData> & { id?: string; media?: MediaItem[]; participants?: Member[]; participantIds?: string[] };
   mode?: 'create' | 'edit';
 }
 
@@ -50,6 +50,9 @@ export function StoryForm({ initialData, mode = 'create' }: StoryFormProps) {
   const { createStory, updateStory } = useStoryStore();
   const [media, setMedia] = useState<UploadedFile[]>(
     initialData?.media?.map((m) => ({ id: m.id, url: m.url, type: m.type })) || []
+  );
+  const [participantIds, setParticipantIds] = useState<string[]>(
+    initialData?.participantIds || initialData?.participants?.map((p) => p.id) || []
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -91,6 +94,7 @@ export function StoryForm({ initialData, mode = 'create' }: StoryFormProps) {
         tags,
         featured: data.featured || false,
         coverImage,
+        participantIds,
         media: media.map((m) => ({
           id: m.id,
           type: m.type,
@@ -147,6 +151,15 @@ export function StoryForm({ initialData, mode = 'create' }: StoryFormProps) {
           placeholder="Seu apelido de guerra"
           error={errors.author?.message}
           {...register('author')}
+        />
+
+        {/* Participants */}
+        <MemberSelector
+          label="Quem Participou da Mamacada?"
+          hint="Selecione os membros que estavam presentes nessa historia"
+          placeholder="Buscar membros..."
+          selectedIds={participantIds}
+          onChange={setParticipantIds}
         />
 
         {/* Excerpt */}

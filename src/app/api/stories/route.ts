@@ -26,6 +26,7 @@ export async function GET(request: NextRequest) {
       where,
       include: {
         media: true,
+        participants: true,
       },
       orderBy: {
         createdAt: 'desc',
@@ -46,7 +47,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { title, content, excerpt, coverImage, author, tags, featured, media } = body;
+    const { title, content, excerpt, coverImage, author, tags, featured, media, participantIds } = body;
 
     const story = await prisma.story.create({
       data: {
@@ -64,9 +65,13 @@ export async function POST(request: NextRequest) {
             caption: m.caption,
           })),
         } : undefined,
+        participants: participantIds && participantIds.length > 0 ? {
+          connect: participantIds.map((id: string) => ({ id })),
+        } : undefined,
       },
       include: {
         media: true,
+        participants: true,
       },
     });
 

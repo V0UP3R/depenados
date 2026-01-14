@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { Button } from '@/components/ui';
+import { Button, ParticipantsList } from '@/components/ui';
 import { StoryCard } from '@/components/stories';
 import { useEventStore } from '@/stores/event-store';
 import { useMamacoConfirmation } from '@/hooks/useMamacoConfirmation';
@@ -207,6 +207,25 @@ export default function EventPage() {
             <p className="text-[var(--text-secondary)] text-lg font-[var(--font-body)] leading-relaxed max-w-3xl">
               {event.description}
             </p>
+          </motion.section>
+        )}
+
+        {/* Participants */}
+        {event.participants && event.participants.length > 0 && (
+          <motion.section
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.25 }}
+            className="mb-12"
+          >
+            <div className="divider-chaos w-full h-px mb-8" />
+            <ParticipantsList
+              participants={event.participants}
+              title="Quem Vai no Role"
+              variant="default"
+              size="md"
+              linkToProfile
+            />
           </motion.section>
         )}
 

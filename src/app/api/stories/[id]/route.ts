@@ -14,6 +14,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       where: { id },
       include: {
         media: true,
+        participants: true,
       },
     });
 
@@ -39,7 +40,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params;
     const body = await request.json();
-    const { title, content, excerpt, coverImage, author, tags, featured, media } = body;
+    const { title, content, excerpt, coverImage, author, tags, featured, media, participantIds } = body;
 
     // Primeiro, deletar mídias existentes se novas forem fornecidas
     if (media) {
@@ -65,9 +66,13 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
             caption: m.caption,
           })),
         } : undefined,
+        participants: participantIds ? {
+          set: participantIds.map((pid: string) => ({ id: pid })),
+        } : undefined,
       },
       include: {
         media: true,
+        participants: true,
       },
     });
 
