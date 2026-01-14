@@ -1,8 +1,20 @@
 export interface MediaItem {
   id: string;
-  type: 'image' | 'video';
+  type: 'image' | 'video' | 'audio';
   url: string;
   caption?: string;
+}
+
+export interface Member {
+  id: string;
+  name: string;
+  nickname: string;
+  avatar?: string;
+  bio?: string;
+  role?: string;
+  joinedAt: string;
+  storiesCount?: number;
+  eventsCount?: number;
 }
 
 export interface Story {

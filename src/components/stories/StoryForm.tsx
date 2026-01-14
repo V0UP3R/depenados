@@ -37,7 +37,7 @@ type StoryFormData = z.infer<typeof storySchema>;
 interface UploadedFile {
   id: string;
   url: string;
-  type: 'image' | 'video';
+  type: 'image' | 'video' | 'audio';
 }
 
 interface StoryFormProps {
@@ -52,7 +52,6 @@ export function StoryForm({ initialData, mode = 'create' }: StoryFormProps) {
     initialData?.media?.map((m) => ({ id: m.id, url: m.url, type: m.type })) || []
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState<StoryFormData | null>(null);
 
   const { confirm, MamacoComponents } = useMamacoConfirmation({
     successMessage: mode === 'edit' ? 'EDITADO!!!' : 'PUBLICADO!!!',
@@ -117,7 +116,6 @@ export function StoryForm({ initialData, mode = 'create' }: StoryFormProps) {
   };
 
   const onSubmit = (data: StoryFormData) => {
-    setFormData(data);
     confirm(() => executeSubmit(data));
   };
 

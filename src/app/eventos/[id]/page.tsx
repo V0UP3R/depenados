@@ -245,6 +245,12 @@ export default function EventPage() {
             </Button>
           </Link>
 
+          <Link href={`/eventos/${event.id}/editar`}>
+            <Button variant="ghost" size="lg" className="text-[var(--neon-blue)] hover:border-[var(--neon-blue)]">
+              Editar Evento
+            </Button>
+          </Link>
+
           <Button
             variant="ghost"
             size="lg"

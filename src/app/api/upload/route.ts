@@ -27,16 +27,21 @@ export async function POST(request: NextRequest) {
         const buffer = Buffer.from(bytes);
 
         const isVideo = file.type.startsWith('video/');
+        const isAudio = file.type.startsWith('audio/');
+
+        // Cloudinary uses 'video' resource type for both video and audio
+        const resourceType = isVideo || isAudio ? 'video' : 'image';
+        const mediaType = isVideo ? 'video' : isAudio ? 'audio' : 'image';
 
         const result = await uploadToCloudinary(buffer, {
           folder: 'depenados/media',
-          resourceType: isVideo ? 'video' : 'image',
+          resourceType,
         });
 
         return {
           id: result.public_id,
           url: result.secure_url,
-          type: isVideo ? 'video' : 'image',
+          type: mediaType,
           originalName: file.name,
           width: result.width,
           height: result.height,

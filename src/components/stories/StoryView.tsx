@@ -1,8 +1,6 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import Link from 'next/link';
-import { Button } from '@/components/ui';
 import type { Story } from '@/types/story';
 
 interface StoryViewProps {
@@ -172,12 +170,19 @@ export function StoryView({ story }: StoryViewProps) {
                     alt={item.caption || 'Prova da mamacada'}
                     className="w-full h-full object-cover"
                   />
-                ) : (
+                ) : item.type === 'video' ? (
                   <video
                     src={item.url}
                     controls
                     className="w-full h-full object-cover"
                   />
+                ) : (
+                  <div className="w-full h-full bg-[var(--surface-dark)] flex flex-col items-center justify-center p-4">
+                    <svg className="w-16 h-16 text-[var(--neon-purple)] mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                    </svg>
+                    <audio src={item.url} controls className="w-full max-w-xs" />
+                  </div>
                 )}
 
                 {item.caption && (
@@ -194,6 +199,12 @@ export function StoryView({ story }: StoryViewProps) {
                   </div>
                 )}
 
+                {item.type === 'audio' && (
+                  <div className="absolute top-2 left-2 px-2 py-1 bg-[var(--void-black)] border border-[var(--neon-purple)] text-[var(--neon-purple)] text-xs font-[var(--font-body)]">
+                    AUDIO
+                  </div>
+                )}
+
                 {/* Scan line on hover */}
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity scan-line pointer-events-none" />
               </motion.div>
@@ -202,22 +213,6 @@ export function StoryView({ story }: StoryViewProps) {
         </motion.section>
       )}
 
-      {/* Back Button */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.6 }}
-        className="mt-16 pt-8 border-t border-[var(--surface-elevated)]"
-      >
-        <Link href="/historias">
-          <Button variant="ghost" size="lg">
-            <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            Voltar pro Arquivo
-          </Button>
-        </Link>
-      </motion.div>
     </article>
   );
 }

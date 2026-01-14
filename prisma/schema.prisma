@@ -16,10 +16,13 @@ model Story {
   excerpt     String?
   coverImage  String?
   author      String
+  authorId    String?  // Membro que escreveu (opcional)
+  authorMember Member? @relation("StoryAuthor", fields: [authorId], references: [id])
   tags        String?  // JSON string array
   featured    Boolean  @default(false)
   eventId     String?  // Evento relacionado (opcional)
   event       Event?   @relation("EventStories", fields: [eventId], references: [id])
+  participants Member[] @relation("StoryParticipants") // Membros que participaram
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   media       Media[]
@@ -53,8 +56,28 @@ model Event {
   date        DateTime                        // Data e hora do evento
   coverImage  String?                         // Imagem de capa
   createdBy   String                          // Quem criou o evento
+  creatorId   String?                         // Membro que criou (opcional)
+  creator     Member?   @relation("EventCreator", fields: [creatorId], references: [id])
   status      String    @default("upcoming")  // upcoming, ongoing, completed, cancelled
   stories     Story[]   @relation("EventStories") // Histórias relacionadas ao evento
+  participants Member[] @relation("EventParticipants") // Membros participantes
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+}
+
+// Membros da irmandade Depenados
+model Member {
+  id              String    @id @default(cuid())
+  name            String                          // Nome real
+  nickname        String    @unique               // Apelido de guerra
+  avatar          String?                         // Foto do membro
+  bio             String?                         // Descrição/bio
+  role            String?                         // Papel no grupo (ex: "O Bêbado Mor", "O Contador de Histórias")
+  storiesAuthored Story[]   @relation("StoryAuthor")      // Histórias que escreveu
+  storiesIn       Story[]   @relation("StoryParticipants") // Histórias em que participou
+  eventsCreated   Event[]   @relation("EventCreator")      // Eventos que criou
+  eventsIn        Event[]   @relation("EventParticipants") // Eventos em que participou
+  joinedAt        DateTime  @default(now())
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 }

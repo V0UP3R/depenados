@@ -7,14 +7,33 @@ import Link from 'next/link';
 import { Button } from '@/components/ui';
 import { StoryView } from '@/components/stories';
 import { useStoryStore } from '@/stores/story-store';
+import { useMamacoConfirmation } from '@/hooks/useMamacoConfirmation';
 import type { Story } from '@/types/story';
 
 export default function HistoriaPage() {
   const params = useParams();
   const router = useRouter();
-  const fetchStoryById = useStoryStore((state) => state.fetchStoryById);
+  const { fetchStoryById, deleteStory } = useStoryStore();
   const [story, setStory] = useState<Story | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const { confirm, MamacoComponents } = useMamacoConfirmation({
+    successMessage: 'HISTORIA DELETADA!!!',
+  });
+
+  const handleDelete = () => {
+    if (!story) return;
+
+    confirm(async () => {
+      setIsDeleting(true);
+      await deleteStory(story.id);
+      setTimeout(() => {
+        router.push('/historias');
+      }, 2800);
+      setIsDeleting(false);
+    });
+  };
 
   useEffect(() => {
     const loadStory = async () => {
@@ -96,13 +115,49 @@ export default function HistoriaPage() {
   }
 
   return (
-    <div className="min-h-screen bg-chaos py-24 md:py-32">
-      {/* Background Effects */}
-      <div className="fixed inset-0 bg-grid opacity-10 pointer-events-none" />
+    <>
+      <MamacoComponents />
+      <div className="min-h-screen bg-chaos py-24 md:py-32">
+        {/* Background Effects */}
+        <div className="fixed inset-0 bg-grid opacity-10 pointer-events-none" />
 
-      <div className="container-chaos relative z-10">
-        <StoryView story={story} />
+        <div className="container-chaos relative z-10">
+          <StoryView story={story} />
+
+          {/* Actions */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+            className="max-w-4xl mx-auto flex flex-wrap gap-4 mt-8 pt-8 border-t border-[var(--surface-elevated)]"
+          >
+            <Link href="/historias">
+              <Button variant="ghost" size="lg">
+                <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Voltar pro Arquivo
+              </Button>
+            </Link>
+
+            <Link href={`/historias/${story.id}/editar`}>
+              <Button variant="ghost" size="lg" className="text-[var(--neon-blue)] hover:border-[var(--neon-blue)]">
+                Editar Historia
+              </Button>
+            </Link>
+
+            <Button
+              variant="ghost"
+              size="lg"
+              onClick={handleDelete}
+              isLoading={isDeleting}
+              className="text-[var(--neon-orange)] hover:border-[var(--neon-orange)]"
+            >
+              Deletar Historia
+            </Button>
+          </motion.div>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

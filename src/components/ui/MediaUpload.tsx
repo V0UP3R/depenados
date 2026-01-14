@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 interface UploadedFile {
   id: string;
   url: string;
-  type: 'image' | 'video';
+  type: 'image' | 'video' | 'audio';
   file?: File;
 }
 
@@ -44,7 +44,7 @@ export function MediaUpload({
       const uploaded: UploadedFile[] = data.files.map((f: { id: string; url: string; type: string }) => ({
         id: f.id || generateId(),
         url: f.url,
-        type: f.type as 'image' | 'video',
+        type: f.type as 'image' | 'video' | 'audio',
       }));
 
       const updatedFiles = [...files, ...uploaded];
@@ -102,7 +102,7 @@ export function MediaUpload({
       >
         <input
           type="file"
-          accept="image/*,video/*"
+          accept="image/*,video/*,audio/*"
           multiple
           onChange={(e) => handleFiles(e.target.files)}
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
@@ -144,7 +144,7 @@ export function MediaUpload({
               Arrasta as provas
             </p>
             <p className="text-sm text-[var(--text-muted)] font-[var(--font-body)]">
-              ou clica pra selecionar • {files.length}/{maxFiles}
+              Fotos, videos e audios • {files.length}/{maxFiles}
             </p>
           </>
         )}
@@ -174,8 +174,14 @@ export function MediaUpload({
                       alt="Upload"
                       className="w-full h-full object-cover"
                     />
-                  ) : (
+                  ) : file.type === 'video' ? (
                     <video src={file.url} className="w-full h-full object-cover" muted />
+                  ) : (
+                    <div className="w-full h-full bg-[var(--surface-dark)] flex items-center justify-center">
+                      <svg className="w-12 h-12 text-[var(--neon-purple)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                      </svg>
+                    </div>
                   )}
                 </div>
 
@@ -194,6 +200,11 @@ export function MediaUpload({
                 {file.type === 'video' && (
                   <div className="absolute bottom-1 left-1 px-1 text-xs bg-[var(--void-black)] text-[var(--neon-blue)] border border-[var(--neon-blue)] font-[var(--font-body)]">
                     VID
+                  </div>
+                )}
+                {file.type === 'audio' && (
+                  <div className="absolute bottom-1 left-1 px-1 text-xs bg-[var(--void-black)] text-[var(--neon-purple)] border border-[var(--neon-purple)] font-[var(--font-body)]">
+                    AUD
                   </div>
                 )}
               </motion.div>

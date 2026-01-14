@@ -46,6 +46,7 @@ export function Footer() {
                 { href: '/', label: 'Início' },
                 { href: '/historias', label: 'Histórias' },
                 { href: '/eventos', label: 'Eventos' },
+                { href: '/membros', label: 'Membros' },
                 { href: '/historias/nova', label: 'Nova História' },
               ].map((link) => (
                 <li key={link.href}>

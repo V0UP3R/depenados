@@ -9,6 +9,7 @@ const navLinks = [
   { href: '/', label: 'Início' },
   { href: '/historias', label: 'Histórias' },
   { href: '/eventos', label: 'Eventos' },
+  { href: '/membros', label: 'Membros' },
   { href: '/historias/nova', label: '+ Nova' },
 ];
 
