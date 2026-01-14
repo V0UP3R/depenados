@@ -1,0 +1,60 @@
+// Depenados - Schema do Banco de Dados
+// Histórias épicas de loucura, bebedeira e irmandade
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Story {
+  id          String   @id @default(cuid())
+  title       String
+  content     String
+  excerpt     String?
+  coverImage  String?
+  author      String
+  tags        String?  // JSON string array
+  featured    Boolean  @default(false)
+  eventId     String?  // Evento relacionado (opcional)
+  event       Event?   @relation("EventStories", fields: [eventId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  media       Media[]
+}
+
+model Media {
+  id        String   @id @default(cuid())
+  type      String   // 'image' | 'video'
+  url       String
+  caption   String?
+  storyId   String
+  story     Story    @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+// Contador de eventos épicos dos Depenados
+model Counter {
+  id        String   @id @default("main") // Singleton - apenas um registro
+  brigas    Int      @default(0)          // Contador de brigas
+  acidentes Int      @default(0)          // Contador de acidentes
+  pts       Int      @default(0)          // Contador de PTs (Perda Total)
+  updatedAt DateTime @updatedAt
+}
+
+// Eventos/Rolês dos Depenados
+model Event {
+  id          String    @id @default(cuid())
+  title       String                          // Nome do evento
+  description String?                         // Descrição do evento
+  location    String?                         // Local do evento
+  date        DateTime                        // Data e hora do evento
+  coverImage  String?                         // Imagem de capa
+  createdBy   String                          // Quem criou o evento
+  status      String    @default("upcoming")  // upcoming, ongoing, completed, cancelled
+  stories     Story[]   @relation("EventStories") // Histórias relacionadas ao evento
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}

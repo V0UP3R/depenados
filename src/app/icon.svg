@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Background -->
+  <rect width="64" height="64" fill="#0a0a0b"/>
+
+  <!-- Main square border (pink neon) -->
+  <rect x="8" y="12" width="48" height="48" fill="none" stroke="#ff2d7a" stroke-width="4"/>
+
+  <!-- Letter D -->
+  <text x="32" y="48" font-family="serif" font-size="36" font-weight="bold" fill="#ff2d7a" text-anchor="middle">D</text>
+
+  <!-- Monkey - positioned top right -->
+  <g transform="translate(44, 4) scale(0.7)">
+    <!-- Left ear outer -->
+    <circle cx="4.5" cy="9" r="4" fill="#39ff14"/>
+    <!-- Left ear inner -->
+    <circle cx="4.5" cy="9" r="2" fill="#0a0a0b"/>
+    <!-- Right ear outer -->
+    <circle cx="19.5" cy="9" r="4" fill="#39ff14"/>
+    <!-- Right ear inner -->
+    <circle cx="19.5" cy="9" r="2" fill="#0a0a0b"/>
+    <!-- Head -->
+    <circle cx="12" cy="12" r="9" fill="#39ff14"/>
+    <!-- Face/muzzle area -->
+    <ellipse cx="12" cy="14.5" rx="5" ry="4" fill="#0a0a0b"/>
+    <!-- Left eye -->
+    <circle cx="9" cy="10" r="1.5" fill="#0a0a0b"/>
+    <!-- Right eye -->
+    <circle cx="15" cy="10" r="1.5" fill="#0a0a0b"/>
+    <!-- Nose -->
+    <circle cx="10.5" cy="14" r="1" fill="#39ff14"/>
+    <circle cx="13.5" cy="14" r="1" fill="#39ff14"/>
+    <!-- Mouth -->
+    <path d="M10 16.5 Q12 18 14 16.5" stroke="#39ff14" stroke-width="0.8" fill="none"/>
+  </g>
+</svg>
