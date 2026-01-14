@@ -43,11 +43,7 @@ export default function MembrosPage() {
         {/* Loading State */}
         {isLoading && (
           <div className="flex items-center justify-center py-20">
-            <motion.div
-              className="w-16 h-16 border-2 border-[var(--neon-green)] border-t-transparent"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-            />
+            <div className="w-16 h-16 border-2 border-[var(--neon-green)] border-t-transparent rounded-full spinner-chaos" />
           </div>
         )}
 

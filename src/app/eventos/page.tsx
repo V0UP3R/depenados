@@ -85,11 +85,7 @@ export default function EventsPage() {
         {/* Events Grid */}
         {isLoading ? (
           <div className="flex justify-center py-20">
-            <motion.div
-              className="w-16 h-16 border-2 border-[var(--neon-blue)] border-t-transparent"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-            />
+            <div className="w-16 h-16 border-2 border-[var(--neon-blue)] border-t-transparent rounded-full spinner-chaos" />
           </div>
         ) : filteredEvents.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">

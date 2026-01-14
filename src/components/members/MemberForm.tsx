@@ -147,11 +147,7 @@ export function MemberForm({ initialData, mode = 'create' }: MemberFormProps) {
               )}
               {isUploading && (
                 <div className="absolute inset-0 bg-[var(--void-black)]/80 flex items-center justify-center">
-                  <motion.div
-                    className="w-8 h-8 border-2 border-[var(--neon-green)] border-t-transparent"
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                  />
+                  <div className="w-8 h-8 border-2 border-[var(--neon-green)] border-t-transparent rounded-full spinner-chaos" />
                 </div>
               )}
             </div>

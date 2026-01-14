@@ -140,11 +140,7 @@ export function MemberSelector({
         />
         <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
           {isLoading && (
-            <motion.div
-              className="w-4 h-4 border-2 border-[var(--neon-blue)] border-t-transparent rounded-full"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-            />
+            <div className="w-4 h-4 border-2 border-[var(--neon-blue)] border-t-transparent rounded-full spinner-chaos" />
           )}
           <svg
             className={`w-5 h-5 text-[var(--text-muted)] transition-transform ${isOpen ? 'rotate-180' : ''}`}

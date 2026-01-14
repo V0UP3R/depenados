@@ -34,31 +34,19 @@ export default function HomePage() {
         {/* Grid Background */}
         <div className="absolute inset-0 bg-grid opacity-20" />
 
-        {/* Animated Neon Blobs */}
+        {/* Animated Neon Blobs - CSS animations for better performance */}
         <div className="absolute inset-0 overflow-hidden">
-          <motion.div
-            className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full"
+          <div
+            className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full blob-pink"
             style={{
               background: 'radial-gradient(circle, var(--neon-pink-glow) 0%, transparent 70%)',
             }}
-            animate={{
-              x: [0, 100, 0],
-              y: [0, 50, 0],
-              scale: [1, 1.2, 1],
-            }}
-            transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
           />
-          <motion.div
-            className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full"
+          <div
+            className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full blob-green"
             style={{
               background: 'radial-gradient(circle, var(--neon-green-glow) 0%, transparent 70%)',
             }}
-            animate={{
-              x: [0, -80, 0],
-              y: [0, -60, 0],
-              scale: [1, 1.3, 1],
-            }}
-            transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
           />
         </div>
 
@@ -221,11 +209,7 @@ export default function HomePage() {
 
           {isLoading ? (
             <div className="flex justify-center py-20">
-              <motion.div
-                className="w-16 h-16 border-2 border-[var(--neon-pink)] border-t-transparent"
-                animate={{ rotate: 360 }}
-                transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-              />
+              <div className="w-16 h-16 border-2 border-[var(--neon-pink)] border-t-transparent rounded-full spinner-chaos" />
             </div>
           ) : featuredStories.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

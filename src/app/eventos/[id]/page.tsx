@@ -81,11 +81,7 @@ export default function EventPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-chaos flex items-center justify-center">
-        <motion.div
-          className="w-16 h-16 border-2 border-[var(--neon-blue)] border-t-transparent"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-        />
+        <div className="w-16 h-16 border-2 border-[var(--neon-blue)] border-t-transparent rounded-full spinner-chaos" />
       </div>
     );
   }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from './Button';
 
@@ -15,7 +15,7 @@ interface ConfirmationModalProps {
 const SECRET_PHRASE = 'na capoeira';
 const HINT_START = 'vou levar minha avó...';
 
-export function ConfirmationModal({
+export const ConfirmationModal = memo(function ConfirmationModal({
   isOpen,
   onConfirm,
   onCancel,
@@ -81,8 +81,9 @@ export function ConfirmationModal({
               <div className="text-center mb-6">
                 <motion.div
                   animate={{ rotate: [0, -10, 10, -10, 0] }}
-                  transition={{ duration: 2, repeat: Infinity }}
+                  transition={{ duration: 2, repeat: 2 }}
                   className="inline-block text-6xl"
+                  style={{ willChange: 'transform' }}
                 >
                   🐒
                 </motion.div>
@@ -157,4 +158,4 @@ export function ConfirmationModal({
       )}
     </AnimatePresence>
   );
-}
+});

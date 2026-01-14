@@ -77,11 +77,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
       >
         {isLoading ? (
-          <motion.span
-            className="inline-block w-5 h-5 border-2 border-current border-t-transparent rounded-full"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
-          />
+          <span className="inline-block w-5 h-5 border-2 border-current border-t-transparent rounded-full spinner-chaos" />
         ) : (
           <span className="relative z-10">{children}</span>
         )}

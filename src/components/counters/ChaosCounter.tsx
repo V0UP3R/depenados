@@ -68,11 +68,7 @@ export function ChaosCounter() {
   if (isLoading) {
     return (
       <div className="flex justify-center py-12">
-        <motion.div
-          className="w-12 h-12 border-2 border-[var(--neon-pink)] border-t-transparent"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-        />
+        <div className="w-12 h-12 border-2 border-[var(--neon-pink)] border-t-transparent rounded-full spinner-chaos" />
       </div>
     );
   }

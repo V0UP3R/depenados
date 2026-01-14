@@ -111,11 +111,7 @@ export function MediaUpload({
 
         {isUploading ? (
           <div className="flex flex-col items-center gap-4">
-            <motion.div
-              className="w-12 h-12 border-2 border-[var(--neon-pink)] border-t-transparent rounded-full"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-            />
+            <div className="w-12 h-12 border-2 border-[var(--neon-pink)] border-t-transparent rounded-full spinner-chaos" />
             <span className="text-[var(--neon-pink)] font-[var(--font-display)] uppercase tracking-wider">
               Enviando...
             </span>

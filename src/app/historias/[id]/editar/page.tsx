@@ -32,11 +32,7 @@ export default function EditStoryPage() {
           animate={{ opacity: 1 }}
           className="text-center"
         >
-          <motion.div
-            className="w-16 h-16 border-2 border-[var(--neon-pink)] border-t-transparent mx-auto mb-4"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-          />
+          <div className="w-16 h-16 border-2 border-[var(--neon-pink)] border-t-transparent rounded-full mx-auto mb-4 spinner-chaos" />
           <p className="text-[var(--neon-pink)] font-[var(--font-display)] uppercase tracking-wider">
             Carregando historia...
           </p>

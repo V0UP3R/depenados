@@ -53,11 +53,7 @@ export default function HistoriaPage() {
           animate={{ opacity: 1 }}
           className="text-center"
         >
-          <motion.div
-            className="w-20 h-20 border-2 border-[var(--neon-pink)] border-t-transparent mx-auto mb-6"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-          />
+          <div className="w-20 h-20 border-2 border-[var(--neon-pink)] border-t-transparent rounded-full mx-auto mb-6 spinner-chaos" />
           <p className="text-[var(--neon-pink)] font-[var(--font-display)] uppercase tracking-wider flicker">
             Carregando a mamacada...
           </p>
