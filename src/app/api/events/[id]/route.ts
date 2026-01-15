@@ -21,6 +21,7 @@ export async function GET(
           },
         },
         participants: true,
+        media: true,
       },
     });
 
@@ -49,7 +50,14 @@ export async function PUT(
   try {
     const { id } = await params;
     const body = await request.json();
-    const { title, description, location, date, coverImage, status, participantIds } = body;
+    const { title, description, location, date, coverImage, status, participantIds, media } = body;
+
+    // Se há mídia para atualizar, primeiro deleta as antigas
+    if (media !== undefined) {
+      await prisma.media.deleteMany({
+        where: { eventId: id },
+      });
+    }
 
     const event = await prisma.event.update({
       where: { id },
@@ -65,9 +73,19 @@ export async function PUT(
             set: participantIds.map((pid: string) => ({ id: pid })),
           },
         }),
+        ...(media && media.length > 0 && {
+          media: {
+            create: media.map((m: { url: string; type: string; caption?: string }) => ({
+              url: m.url,
+              type: m.type,
+              caption: m.caption,
+            })),
+          },
+        }),
       },
       include: {
         participants: true,
+        media: true,
       },
     });
 

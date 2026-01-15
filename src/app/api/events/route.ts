@@ -31,8 +31,9 @@ export async function GET(request: NextRequest) {
           },
         },
         participants: true,
+        media: true,
         _count: {
-          select: { stories: true },
+          select: { stories: true, media: true },
         },
       },
       orderBy: {
@@ -54,7 +55,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { title, description, location, date, coverImage, createdBy, status, participantIds } = body;
+    const { title, description, location, date, coverImage, createdBy, status, participantIds, media } = body;
 
     const event = await prisma.event.create({
       data: {
@@ -68,9 +69,17 @@ export async function POST(request: NextRequest) {
         participants: participantIds && participantIds.length > 0 ? {
           connect: participantIds.map((id: string) => ({ id })),
         } : undefined,
+        media: media && media.length > 0 ? {
+          create: media.map((m: { url: string; type: string; caption?: string }) => ({
+            url: m.url,
+            type: m.type,
+            caption: m.caption,
+          })),
+        } : undefined,
       },
       include: {
         participants: true,
+        media: true,
       },
     });
 

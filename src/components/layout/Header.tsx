@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const navLinks = [
   { href: '/', label: 'Início' },
@@ -17,10 +17,12 @@ export function Header() {
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -29,27 +31,23 @@ export function Header() {
   }, [pathname]);
 
   return (
-    <motion.header
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
+    <header
       className={`
         fixed top-0 left-0 right-0 z-[var(--z-header)]
         transition-all duration-300
+        ${mounted ? 'translate-y-0' : '-translate-y-full'}
         ${isScrolled
           ? 'bg-[var(--void-black)]/95 backdrop-blur-sm border-b border-[var(--surface-elevated)]'
           : 'bg-transparent'
         }
       `}
+      style={{ willChange: 'transform' }}
     >
       <nav className="container-chaos">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link href="/">
-            <motion.div
-              className="flex items-center gap-3 group"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
+            <div className="flex items-center gap-3 group hover:scale-105 active:scale-95 transition-transform">
               <div className="relative">
                 <div className="w-12 h-12 border-2 border-[var(--neon-pink)] flex items-center justify-center group-hover:shadow-[0_0_20px_var(--neon-pink-glow)] transition-shadow">
                   <span className="font-[var(--font-accent)] text-2xl text-[var(--neon-pink)]">D</span>
@@ -86,41 +84,36 @@ export function Header() {
               <span className="hidden sm:block font-[var(--font-display)] text-2xl tracking-wider text-neon-pink">
                 DEPENADOS
               </span>
-            </motion.div>
+            </div>
           </Link>
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => (
               <Link key={link.href} href={link.href}>
-                <motion.span
+                <span
                   className={`
                     relative px-4 py-2 font-[var(--font-display)] text-sm uppercase tracking-wider
-                    transition-colors duration-150
+                    transition-all duration-150 hover:-translate-y-0.5
                     ${pathname === link.href
                       ? 'text-[var(--neon-pink)]'
                       : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
                     }
                   `}
-                  whileHover={{ y: -2 }}
                 >
                   {link.label}
                   {pathname === link.href && (
-                    <motion.div
-                      layoutId="activeNav"
-                      className="absolute bottom-0 left-0 right-0 h-[2px] bg-[var(--neon-pink)] shadow-[0_0_10px_var(--neon-pink)]"
-                    />
+                    <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[var(--neon-pink)] shadow-[0_0_10px_var(--neon-pink)]" />
                   )}
-                </motion.span>
+                </span>
               </Link>
             ))}
           </div>
 
           {/* Mobile Menu Button */}
-          <motion.button
-            className="md:hidden p-2 border border-[var(--surface-elevated)] text-[var(--text-primary)]"
+          <button
+            className="md:hidden p-2 border border-[var(--surface-elevated)] text-[var(--text-primary)] active:scale-95 transition-transform"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            whileTap={{ scale: 0.95 }}
           >
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               {isMobileMenuOpen ? (
@@ -129,7 +122,7 @@ export function Header() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               )}
             </svg>
-          </motion.button>
+          </button>
         </div>
       </nav>
 
@@ -148,7 +141,7 @@ export function Header() {
                   key={link.href}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
+                  transition={{ delay: index * 0.05 }}
                 >
                   <Link href={link.href}>
                     <span
@@ -170,6 +163,6 @@ export function Header() {
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.header>
+    </header>
   );
 }

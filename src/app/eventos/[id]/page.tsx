@@ -225,6 +225,83 @@ export default function EventPage() {
           </motion.section>
         )}
 
+        {/* Media Gallery */}
+        {event.media && event.media.length > 0 && (
+          <motion.section
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.28 }}
+            className="mb-12"
+          >
+            <div className="divider-chaos w-full h-px mb-8" />
+
+            <div className="flex items-center gap-4 mb-8">
+              <h2 className="font-[var(--font-display)] text-2xl text-[var(--text-primary)] uppercase tracking-wider">
+                Provas do <span className="text-neon-pink">Crime</span>
+              </h2>
+              <div className="flex-1 divider-chaos h-px" />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {event.media.map((item, index) => (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="relative overflow-hidden aspect-video group border border-[var(--surface-elevated)] hover:border-[var(--neon-pink)] transition-colors"
+                >
+                  {item.type === 'image' ? (
+                    <img
+                      src={item.url}
+                      alt={item.caption || 'Prova da mamacada'}
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                    />
+                  ) : item.type === 'video' ? (
+                    <video
+                      src={item.url}
+                      controls
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-[var(--surface-dark)] flex flex-col items-center justify-center p-4">
+                      <svg className="w-16 h-16 text-[var(--neon-purple)] mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                      </svg>
+                      <audio src={item.url} controls className="w-full max-w-xs" />
+                    </div>
+                  )}
+
+                  {item.caption && (
+                    <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-[var(--void-black)] to-transparent">
+                      <p className="text-[var(--text-primary)] text-sm font-[var(--font-body)]">
+                        {item.caption}
+                      </p>
+                    </div>
+                  )}
+
+                  {item.type === 'video' && (
+                    <div className="absolute top-2 left-2 px-2 py-1 bg-[var(--void-black)] border border-[var(--neon-blue)] text-[var(--neon-blue)] text-xs font-[var(--font-body)]">
+                      VIDEO
+                    </div>
+                  )}
+
+                  {item.type === 'audio' && (
+                    <div className="absolute top-2 left-2 px-2 py-1 bg-[var(--void-black)] border border-[var(--neon-purple)] text-[var(--neon-purple)] text-xs font-[var(--font-body)]">
+                      AUDIO
+                    </div>
+                  )}
+
+                  {/* Scan line on hover */}
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity scan-line pointer-events-none" />
+                </motion.div>
+              ))}
+            </div>
+          </motion.section>
+        )}
+
         {/* Stories from this Event */}
         {event.stories && event.stories.length > 0 && (
           <motion.section

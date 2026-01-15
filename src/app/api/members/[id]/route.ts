@@ -15,18 +15,30 @@ export async function GET(
         storiesAuthored: {
           orderBy: { createdAt: 'desc' },
           take: 5,
+          include: {
+            media: true,
+          },
         },
         storiesIn: {
           orderBy: { createdAt: 'desc' },
-          take: 5,
+          take: 10,
+          include: {
+            media: true,
+          },
         },
         eventsCreated: {
           orderBy: { date: 'desc' },
           take: 5,
+          include: {
+            media: true,
+          },
         },
         eventsIn: {
           orderBy: { date: 'desc' },
-          take: 5,
+          take: 10,
+          include: {
+            media: true,
+          },
         },
         _count: {
           select: {

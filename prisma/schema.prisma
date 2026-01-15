@@ -30,11 +30,13 @@ model Story {
 
 model Media {
   id        String   @id @default(cuid())
-  type      String   // 'image' | 'video'
+  type      String   // 'image' | 'video' | 'audio'
   url       String
   caption   String?
-  storyId   String
-  story     Story    @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  storyId   String?
+  story     Story?   @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  eventId   String?
+  event     Event?   @relation(fields: [eventId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 }
 
@@ -61,6 +63,7 @@ model Event {
   status      String    @default("upcoming")  // upcoming, ongoing, completed, cancelled
   stories     Story[]   @relation("EventStories") // Histórias relacionadas ao evento
   participants Member[] @relation("EventParticipants") // Membros participantes
+  media       Media[]                         // Mídia do evento (fotos, vídeos, áudios)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }

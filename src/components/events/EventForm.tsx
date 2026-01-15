@@ -6,10 +6,16 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { Button, Input, Textarea, MemberSelector } from '@/components/ui';
+import { Button, Input, Textarea, MemberSelector, MediaUpload } from '@/components/ui';
 import { useEventStore } from '@/stores/event-store';
 import { useMamacoConfirmation } from '@/hooks/useMamacoConfirmation';
-import type { Event, EventStatus, Member } from '@/types/story';
+import type { Event, EventStatus, Member, MediaItem } from '@/types/story';
+
+interface UploadedFile {
+  id: string;
+  url: string;
+  type: 'image' | 'video' | 'audio';
+}
 
 const eventSchema = z.object({
   title: z
@@ -35,7 +41,7 @@ const eventSchema = z.object({
 type EventFormData = z.infer<typeof eventSchema>;
 
 interface EventFormProps {
-  initialData?: Partial<Event> & { participants?: Member[]; participantIds?: string[] };
+  initialData?: Partial<Event> & { participants?: Member[]; participantIds?: string[]; media?: MediaItem[] };
   mode?: 'create' | 'edit';
 }
 
@@ -43,6 +49,9 @@ export function EventForm({ initialData, mode = 'create' }: EventFormProps) {
   const router = useRouter();
   const { createEvent, updateEvent } = useEventStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [media, setMedia] = useState<UploadedFile[]>(
+    initialData?.media?.map((m) => ({ id: m.id, url: m.url, type: m.type })) || []
+  );
   const [participantIds, setParticipantIds] = useState<string[]>(
     initialData?.participantIds || initialData?.participants?.map((p) => p.id) || []
   );
@@ -85,6 +94,11 @@ export function EventForm({ initialData, mode = 'create' }: EventFormProps) {
         createdBy: data.createdBy,
         status: (data.status || 'upcoming') as EventStatus,
         participantIds,
+        media: media.map((m) => ({
+          id: m.id,
+          url: m.url,
+          type: m.type,
+        })),
       };
 
       if (mode === 'edit' && initialData?.id) {
@@ -177,6 +191,21 @@ export function EventForm({ initialData, mode = 'create' }: EventFormProps) {
           selectedIds={participantIds}
           onChange={setParticipantIds}
         />
+
+        {/* Media Upload */}
+        <div className="space-y-2">
+          <label className="font-[var(--font-display)] text-sm text-[var(--text-secondary)] uppercase tracking-wider block">
+            Fotos e Videos do Evento
+          </label>
+          <p className="text-xs text-[var(--text-muted)] font-[var(--font-body)] mb-2">
+            Suba as provas da mamacada! Fotos, videos e audios.
+          </p>
+          <MediaUpload
+            existingFiles={media}
+            onFilesChange={setMedia}
+            maxFiles={20}
+          />
+        </div>
 
         {/* Status (only in edit mode) */}
         {mode === 'edit' && (

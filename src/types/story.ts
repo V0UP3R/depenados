@@ -53,6 +53,7 @@ export interface Event {
   participantIds?: string[];
   status: EventStatus;
   stories?: Story[];
+  media?: MediaItem[];
   _count?: { stories: number };
   createdAt: string;
   updatedAt: string;

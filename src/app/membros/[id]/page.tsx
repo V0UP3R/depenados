@@ -7,13 +7,21 @@ import { useParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui';
 import { useMemberStore } from '@/stores/member-store';
 import { useMamacoConfirmation } from '@/hooks/useMamacoConfirmation';
-import type { Member, Story, Event } from '@/types/story';
+import type { Member, Story, Event, MediaItem } from '@/types/story';
+
+interface StoryWithMedia extends Story {
+  media: MediaItem[];
+}
+
+interface EventWithMedia extends Event {
+  media: MediaItem[];
+}
 
 interface MemberDetail extends Member {
-  storiesAuthored?: Story[];
-  storiesIn?: Story[];
-  eventsCreated?: Event[];
-  eventsIn?: Event[];
+  storiesAuthored?: StoryWithMedia[];
+  storiesIn?: StoryWithMedia[];
+  eventsCreated?: EventWithMedia[];
+  eventsIn?: EventWithMedia[];
   _count?: {
     storiesAuthored: number;
     storiesIn: number;
@@ -102,14 +110,37 @@ export default function MemberPage() {
   }
 
   const allStories = [...(member.storiesAuthored || []), ...(member.storiesIn || [])];
-  const uniqueStories = allStories.filter((story, index, self) => 
+  const uniqueStories = allStories.filter((story, index, self) =>
     index === self.findIndex((s) => s.id === story.id)
   );
 
   const allEvents = [...(member.eventsCreated || []), ...(member.eventsIn || [])];
-  const uniqueEvents = allEvents.filter((event, index, self) => 
+  const uniqueEvents = allEvents.filter((event, index, self) =>
     index === self.findIndex((e) => e.id === event.id)
   );
+
+  // Coletar todas as mídias das histórias e eventos do membro
+  const allMedia: (MediaItem & { source: string; sourceTitle: string })[] = [];
+
+  uniqueStories.forEach((story) => {
+    (story.media || []).forEach((media) => {
+      allMedia.push({
+        ...media,
+        source: 'story',
+        sourceTitle: story.title,
+      });
+    });
+  });
+
+  uniqueEvents.forEach((event) => {
+    (event.media || []).forEach((media) => {
+      allMedia.push({
+        ...media,
+        source: 'event',
+        sourceTitle: event.title,
+      });
+    });
+  });
 
   return (
     <>
@@ -192,12 +223,104 @@ export default function MemberPage() {
             </div>
           </motion.div>
 
+          {/* Media Gallery Section */}
+          {allMedia.length > 0 && (
+            <motion.section
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="mb-12"
+            >
+              <div className="flex items-center gap-4 mb-6">
+                <h2 className="font-[var(--font-display)] text-2xl text-[var(--text-primary)] uppercase tracking-wider">
+                  Galeria de <span className="text-neon-pink">Provas</span>
+                </h2>
+                <div className="flex-1 divider-chaos h-px" />
+                <span className="text-[var(--text-muted)] text-sm font-[var(--font-body)]">
+                  {allMedia.length} {allMedia.length === 1 ? 'arquivo' : 'arquivos'}
+                </span>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {allMedia.slice(0, 12).map((media, index) => (
+                  <motion.div
+                    key={media.id}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: index * 0.05 }}
+                    className="relative aspect-square overflow-hidden group border border-[var(--surface-elevated)] hover:border-[var(--neon-pink)] transition-colors"
+                  >
+                    {media.type === 'image' ? (
+                      <img
+                        src={media.url}
+                        alt={media.caption || 'Prova da mamacada'}
+                        loading="lazy"
+                        decoding="async"
+                        className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                      />
+                    ) : media.type === 'video' ? (
+                      <div className="w-full h-full bg-[var(--surface-dark)] flex items-center justify-center">
+                        <video
+                          src={media.url}
+                          className="w-full h-full object-cover"
+                          muted
+                          playsInline
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center bg-[var(--void-black)]/50">
+                          <svg className="w-12 h-12 text-[var(--neon-blue)]" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z" />
+                          </svg>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="w-full h-full bg-[var(--surface-dark)] flex flex-col items-center justify-center p-4">
+                        <svg className="w-12 h-12 text-[var(--neon-purple)] mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                        </svg>
+                        <span className="text-xs text-[var(--text-muted)] text-center">Audio</span>
+                      </div>
+                    )}
+
+                    {/* Overlay with info */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[var(--void-black)] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="absolute bottom-0 left-0 right-0 p-3">
+                        <p className="text-xs text-[var(--text-primary)] font-[var(--font-body)] line-clamp-1">
+                          {media.sourceTitle}
+                        </p>
+                        <p className="text-xs text-[var(--text-muted)]">
+                          {media.source === 'story' ? 'Historia' : 'Evento'}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Type badge */}
+                    {media.type !== 'image' && (
+                      <div className={`absolute top-2 left-2 px-2 py-1 text-xs font-[var(--font-body)] ${
+                        media.type === 'video'
+                          ? 'bg-[var(--void-black)] border border-[var(--neon-blue)] text-[var(--neon-blue)]'
+                          : 'bg-[var(--void-black)] border border-[var(--neon-purple)] text-[var(--neon-purple)]'
+                      }`}>
+                        {media.type === 'video' ? 'VIDEO' : 'AUDIO'}
+                      </div>
+                    )}
+                  </motion.div>
+                ))}
+              </div>
+              {allMedia.length > 12 && (
+                <div className="text-center mt-6">
+                  <span className="text-[var(--text-muted)] text-sm font-[var(--font-body)]">
+                    +{allMedia.length - 12} arquivos nas historias e eventos
+                  </span>
+                </div>
+              )}
+            </motion.section>
+          )}
+
           {/* Stories Section */}
           {uniqueStories.length > 0 && (
             <motion.section
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
+              transition={{ delay: 0.3 }}
               className="mb-12"
             >
               <div className="flex items-center gap-4 mb-6">
@@ -231,7 +354,7 @@ export default function MemberPage() {
             <motion.section
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
+              transition={{ delay: 0.4 }}
               className="mb-12"
             >
               <div className="flex items-center gap-4 mb-6">
@@ -264,7 +387,7 @@ export default function MemberPage() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
+            transition={{ delay: 0.5 }}
             className="flex flex-wrap gap-4 pt-8 border-t border-[var(--surface-elevated)]"
           >
             <Link href={`/membros/${member.id}/editar`}>

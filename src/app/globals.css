@@ -1,5 +1,23 @@
 /* Google Fonts - Tipografia Crua e Impactante */
+/* Using display=swap for faster initial paint */
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Permanent+Marker&family=Space+Mono:wght@400;700&display=swap');
+
+/* Font-face fallbacks for better initial load */
+@font-face {
+  font-family: 'Bebas Neue Fallback';
+  src: local('Arial Narrow Bold'), local('Arial');
+  font-weight: 400;
+  font-display: swap;
+  ascent-override: 100%;
+  descent-override: 20%;
+}
+
+@font-face {
+  font-family: 'Space Mono Fallback';
+  src: local('Courier New'), local('monospace');
+  font-weight: 400;
+  font-display: swap;
+}
 
 @import "tailwindcss";
 
@@ -50,9 +68,10 @@
   --chaos-6: var(--neon-purple);
 
   /* ===== TYPOGRAPHY ===== */
-  --font-display: 'Bebas Neue', sans-serif;
-  --font-accent: 'Permanent Marker', cursive;
-  --font-body: 'Space Mono', monospace;
+  /* System font stack fallbacks for instant render */
+  --font-display: 'Bebas Neue', 'Arial Narrow', Arial, sans-serif;
+  --font-accent: 'Permanent Marker', 'Comic Sans MS', cursive;
+  --font-body: 'Space Mono', 'Courier New', Courier, monospace;
 
   /* ===== SPACING ===== */
   --space-xs: 0.25rem;
@@ -240,6 +259,12 @@
   will-change: transform;
 }
 
+/* Initial page load animation */
+@keyframes fade-in-page {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 /* ===== BASE STYLES ===== */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -257,6 +282,11 @@ body {
   line-height: 1.6;
   min-height: 100vh;
   overflow-x: hidden;
+  animation: fade-in-page 0.3s ease-out;
+  /* Optimize text rendering */
+  text-rendering: optimizeSpeed;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* ===== NOISE OVERLAY (GPU accelerated, otimizado) ===== */
